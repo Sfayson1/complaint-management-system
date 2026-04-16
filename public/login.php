@@ -1,7 +1,10 @@
 <?php
 session_start();
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../app/controllers/AuthController.php';
 
 $db = new Database();
 $conn = $db->connect();
@@ -12,41 +15,20 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $email = trim($_POST["email"]);
     $password = $_POST["password"];
 
-    try {
-        $stmt = $conn->prepare("
-            SELECT users.user_id, users.password_hash, users.role, customers.first_name
-            FROM users
-            LEFT JOIN customers ON users.user_id = customers.user_id
-            WHERE users.email = ?
-        ");
-        $stmt->execute([$email]);
+    $auth = new AuthController($conn);
+    $user = $auth->login($email, $password);
 
-        $user = $stmt->fetch();
-
-        if ($user && password_verify($password, $user["password_hash"])) {
-
-            // store session
-            $_SESSION["user_id"] = $user["user_id"];
-            $_SESSION["role"] = $user["role"];
-            $_SESSION["first_name"] = $user["first_name"];
-
-            // redirect based on role
-            if ($user["role"] === "customer") {
-                header("Location: customer_dashboard.php");
-            } elseif ($user["role"] === "technician") {
-                header("Location: technician_dashboard.php");
-            } else {
-                header("Location: admin_dashboard.php");
-            }
-
-            exit();
-
+    if ($user) {
+        if ($user["role"] === "customer") {
+            header("Location: customer_dashboard.php");
+        } elseif ($user["role"] === "technician") {
+            header("Location: technician_dashboard.php");
         } else {
-            $message = "Invalid email or password.";
+            header("Location: admin_dashboard.php");
         }
-
-    } catch (PDOException $e) {
-        $message = "Error: " . $e->getMessage();
+        exit();
+    } else {
+        $message = "Invalid email or password.";
     }
 }
 ?>
