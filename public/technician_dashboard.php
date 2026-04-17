@@ -3,87 +3,78 @@ session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-if (!isset($_SESSION["user_id"]) || $_SESSION["role"] !== "customer") {
+if (!isset($_SESSION["user_id"]) || $_SESSION["role"] !== "technician") {
     header("Location: login.php");
     exit();
 }
 
 require_once __DIR__ . '/../config/database.php';
-require_once __DIR__ . '/../app/controllers/ComplaintController.php';
-require_once __DIR__ . '/../app/models/Customer.php';
+require_once __DIR__ . '/../app/models/Technician.php';
 
 $db = new Database();
 $conn = $db->connect();
 
-$complaintController = new ComplaintController($conn);
-$customerModel = new Customer($conn);
+$technicianModel = new Technician($conn);
+$employee = $technicianModel->getEmployeeByUserId($_SESSION["user_id"]);
 
-$customer = $customerModel->getByUserId($_SESSION["user_id"]);
-
-if (!$customer) {
-    die("Customer record not found.");
+if (!$employee) {
+    die("Technician record not found.");
 }
 
-$customerId = $customer["customer_id"];
-$complaints = $complaintController->getCustomerComplaints($customerId);
+$employeeId = $employee["employee_id"];
+$assignedComplaints = $technicianModel->getAssignedComplaints($employeeId);
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>My Complaints</title>
+    <title>Technician Dashboard</title>
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
 
 <div class="page-wrapper">
     <div class="card">
-
         <div class="page-header">
-            <h1>My Complaints</h1>
-            <a href="customer_dashboard.php" class="btn btn-secondary">Back to Dashboard</a>
+            <h1>Welcome, <?php echo htmlspecialchars($employee["first_name"]); ?> 👋</h1>
+            <a href="logout.php" class="btn btn-secondary">Logout</a>
         </div>
 
-        <?php if (empty($complaints)): ?>
-            <p class="empty-state-text">You haven’t submitted any complaints yet.</p>
-            <a href="submit_complaint.php" class="btn">Submit your first complaint</a>
+        <p class="page-subtitle">Assigned complaints dashboard</p>
+
+        <?php if (empty($assignedComplaints)): ?>
+            <p class="empty-state-text">No complaints are currently assigned to you.</p>
         <?php else: ?>
             <div class="table-wrapper">
                 <table>
                     <thead>
                         <tr>
                             <th>ID</th>
+                            <th>Customer</th>
                             <th>Product/Service</th>
                             <th>Category</th>
-                            <th>Description</th>
                             <th>Status</th>
                             <th>Date Submitted</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($complaints as $complaint): ?>
+                        <?php foreach ($assignedComplaints as $complaint): ?>
                             <tr>
                                 <td>#<?php echo htmlspecialchars($complaint["complaint_id"]); ?></td>
+                                <td>
+                                    <?php echo htmlspecialchars($complaint["first_name"] . ' ' . $complaint["last_name"]); ?>
+                                </td>
                                 <td><?php echo htmlspecialchars($complaint["product_name"]); ?></td>
                                 <td><?php echo htmlspecialchars($complaint["category_name"]); ?></td>
-                                <td><?php echo htmlspecialchars($complaint["description"]); ?></td>
                                 <td>
                                     <span class="status-badge status-<?php echo htmlspecialchars(strtolower($complaint["status"])); ?>">
                                         <?php echo htmlspecialchars($complaint["status"]); ?>
                                     </span>
                                 </td>
+                                <td><?php echo htmlspecialchars(date("M j, Y", strtotime($complaint["created_at"]))); ?></td>
                                 <td>
-                                    <?php
-                                    if (!empty($complaint["created_at"])) {
-                                        echo htmlspecialchars(date("M j, Y", strtotime($complaint["created_at"])));
-                                    } else {
-                                        echo "N/A";
-                                    }
-                                    ?>
-                                </td>
-                                <td>
-                                    <a href="customer_complaint_detail.php?id=<?php echo htmlspecialchars($complaint["complaint_id"]); ?>" class="btn">
+                                    <a href="technician_complaint_detail.php?id=<?php echo $complaint["complaint_id"]; ?>" class="btn">
                                         View
                                     </a>
                                 </td>

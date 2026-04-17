@@ -12,23 +12,29 @@ $conn = $db->connect();
 $message = "";
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $email = trim($_POST["email"]);
-    $password = $_POST["password"];
+    $email = trim($_POST["email"] ?? "");
+    $password = $_POST["password"] ?? "";
 
-    $auth = new AuthController($conn);
-    $user = $auth->login($email, $password);
-
-    if ($user) {
-        if ($user["role"] === "customer") {
-            header("Location: customer_dashboard.php");
-        } elseif ($user["role"] === "technician") {
-            header("Location: technician_dashboard.php");
-        } else {
-            header("Location: admin_dashboard.php");
-        }
-        exit();
+    if (empty($email) || empty($password)) {
+        $message = "Email and password are required.";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $message = "Please enter a valid email address.";
     } else {
-        $message = "Invalid email or password.";
+        $auth = new AuthController($conn);
+        $user = $auth->login($email, $password);
+
+        if ($user) {
+            if ($user["role"] === "customer") {
+                header("Location: customer_dashboard.php");
+            } elseif ($user["role"] === "technician") {
+                header("Location: technician_dashboard.php");
+            } else {
+                header("Location: admin_dashboard.php");
+            }
+            exit();
+        } else {
+            $message = "Invalid email or password.";
+        }
     }
 }
 ?>
@@ -37,24 +43,37 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <html>
 <head>
     <title>Login</title>
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
 
-<h1>Login</h1>
+<div class="auth-wrapper">
+    <div class="card">
+        <h1>Login</h1>
+        <hr class="section-divider">
 
-<?php if (!empty($message)): ?>
-    <p><?php echo htmlspecialchars($message); ?></p>
-<?php endif; ?>
+        <?php if (!empty($message)): ?>
+            <div class="error-message">
+                <?php echo htmlspecialchars($message); ?>
+            </div>
+        <?php endif; ?>
 
-<form method="POST">
-    <label>Email:</label><br>
-    <input type="email" name="email" required><br><br>
+        <form method="POST" action="">
+            <label for="email">Email</label>
+            <input id="email" type="email" name="email" maxlength="100" required
+                   value="<?php echo htmlspecialchars($_POST["email"] ?? ""); ?>">
 
-    <label>Password:</label><br>
-    <input type="password" name="password" required><br><br>
+            <label for="password">Password</label>
+            <input id="password" type="password" name="password" required>
 
-    <button type="submit">Login</button>
-</form>
+            <button type="submit">Login</button>
+        </form>
+
+        <p class="auth-footer">
+            Don't have an account? <a href="register.php">Register here</a>
+        </p>
+    </div>
+</div>
 
 </body>
 </html>

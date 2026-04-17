@@ -6,7 +6,11 @@ A web-based application built using PHP and MySQL that allows customers to submi
 
 ## 📌 Project Overview
 
-This application simulates a real-world customer complaint management system. It supports multiple user roles and ensures that each user can only access features relevant to their role.
+This application simulates a real-world customer complaint management system with a complete workflow:
+
+Customer → Administrator → Technician → Resolution
+
+Each role interacts with the system through a secure, role-based interface, ensuring proper access control and data integrity.
 
 ### 👥 User Roles
 - **Customer**
@@ -52,14 +56,49 @@ The application uses a relational database with the following key tables:
 
 ## ✨ Features Implemented
 
-- User registration (customers)
-- Secure login system using password hashing
+### 👤 Customer
+- User registration with full profile details
+- Secure login system with password hashing
+- Update profile information (PRG pattern implemented)
+- Submit complaints with:
+  - product/service selection
+  - complaint category selection
+  - description validation (max 2000 characters)
+  - optional image upload
+- View all submitted complaints
+- View detailed complaint page including:
+  - complaint status
+  - technician notes
+  - resolution notes
+
+### 🛠️ Technician
+- Secure login
+- View assigned complaints
+- View full complaint details including customer information
+- Add technician notes (blocked if complaint is resolved)
+- Mark complaints as resolved
+- Automatically store:
+  - resolution date
+  - resolution notes
+- Prevent invalid actions:
+  - cannot re-resolve a complaint
+  - cannot add notes after resolution
+
+### 🧑‍💼 Administrator
+- Secure login
+- View open complaints
+- Assign complaints to technicians
+- Input validation for assignment actions
+
+### 🔐 System Features
+- Role-based access control (Customer / Technician / Admin)
 - Session-based authentication
-- Role-based access control
-- Personalized dashboard (displays user’s first name)
-- Complaint submission form
-- Dropdown selection for products/services and complaint categories
-- View submitted complaints
+- Full server-side validation aligned with database schema:
+  - length validation
+  - format validation (email, phone, ZIP, state)
+  - password complexity enforcement
+- Prepared statements for all database interactions
+- PRG (Post/Redirect/Get) pattern to prevent duplicate form submissions
 
 ---
 
@@ -87,7 +126,7 @@ The application uses a relational database with the following key tables:
 
 ---
 
-## 📸 Screenshots 
+## 📸 Screenshots
 
 
 
@@ -99,16 +138,22 @@ The application uses a relational database with the following key tables:
 - Separating authentication data from user-specific data
 - Implementing secure login systems with sessions
 - Debugging PHP and database integration issues
+- Aligning application validation rules with database schema constraints
+- Implementing workflow-based validation to prevent invalid system states
 
 ---
 
 ## 🔮 Future Improvements
 
-- File/image upload for complaints
-- Admin dashboard for assigning complaints
-- Technician dashboard for managing tasks
-- Improved UI/UX design
-- Input validation enhancements
+- Change password functionality for all user roles
+- Admin management pages:
+  - view/update customers
+  - add/update employees
+- Admin reporting:
+  - unassigned complaints view
+  - technician workload tracking
+- Optional: switch login from email to user ID for strict requirement alignment
+- UI/UX enhancements and responsive design improvements
 
 ---
 

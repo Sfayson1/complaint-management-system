@@ -12,6 +12,11 @@ class ComplaintController {
         return $this->complaintModel->create($customerId, $productServiceId, $categoryId, $description);
     }
 
+    public function saveComplaintImage($complaintId, $filePath) {
+    return $this->complaintModel->saveImage($complaintId, $filePath);
+    }
+
+
     public function getCustomerComplaints($customerId) {
         return $this->complaintModel->getByCustomerId($customerId);
     }

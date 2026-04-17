@@ -19,15 +19,21 @@ $complaintController = new ComplaintController($conn);
 $customerModel = new Customer($conn);
 
 $message = "";
+$messageClass = "";
 
-// Still okay to load dropdown data here for now
+if (isset($_SESSION["flash_message"])) {
+    $message = $_SESSION["flash_message"];
+    $messageClass = $_SESSION["flash_class"];
+
+    unset($_SESSION["flash_message"], $_SESSION["flash_class"]);
+}
+
 $productStmt = $conn->query("SELECT product_service_id, name FROM products_services ORDER BY name");
 $products = $productStmt->fetchAll(PDO::FETCH_ASSOC);
 
 $categoryStmt = $conn->query("SELECT category_id, name FROM complaint_categories ORDER BY name");
 $categories = $categoryStmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Get customer_id from logged-in user using model
 $customer = $customerModel->getByUserId($_SESSION["user_id"]);
 
 if (!$customer) {
@@ -36,6 +42,10 @@ if (!$customer) {
 
 $customerId = $customer["customer_id"];
 
+$productServiceId = "";
+$categoryId = "";
+$description = "";
+
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $productServiceId = $_POST["product_service_id"] ?? "";
     $categoryId = $_POST["category_id"] ?? "";
@@ -43,15 +53,61 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     if (empty($productServiceId) || empty($categoryId) || empty($description)) {
         $message = "All fields are required.";
+        $messageClass = "error-message";
+    } elseif (!is_numeric($productServiceId) || !is_numeric($categoryId)) {
+        $message = "Invalid product or category selection.";
+        $messageClass = "error-message";
+    } elseif (strlen($description) > 2000) {
+        $message = "Description must be 2000 characters or fewer.";
+        $messageClass = "error-message";
     } else {
-        $success = $complaintController->submitComplaint(
+        $complaintId = $complaintController->submitComplaint(
             $customerId,
             $productServiceId,
             $categoryId,
             $description
         );
 
-        $message = $success ? "Complaint submitted successfully." : "Failed to submit complaint.";
+        if ($complaintId) {
+            // Handle image upload if a file was selected
+            if (isset($_FILES["complaint_image"]) && $_FILES["complaint_image"]["error"] === 0) {
+                $allowedTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+                $fileType = mime_content_type($_FILES["complaint_image"]["tmp_name"]);
+                $fileSize = $_FILES["complaint_image"]["size"];
+
+                if (!in_array($fileType, $allowedTypes)) {
+                    $message = "Only JPG, PNG, GIF, and WEBP images are allowed.";
+                    $messageClass = "error-message";
+                } elseif ($fileSize > 2 * 1024 * 1024) {
+                    $message = "Image must be 2MB or smaller.";
+                    $messageClass = "error-message";
+                } else {
+                    $uploadDir = __DIR__ . '/assets/uploads/';
+                    $fileExtension = pathinfo($_FILES["complaint_image"]["name"], PATHINFO_EXTENSION);
+                    $newFileName = 'complaint_' . $complaintId . '_' . time() . '.' . $fileExtension;
+                    $targetPath = $uploadDir . $newFileName;
+
+                    if (move_uploaded_file($_FILES["complaint_image"]["tmp_name"], $targetPath)) {
+                        $relativePath = 'assets/uploads/' . $newFileName;
+                        $complaintController->saveComplaintImage($complaintId, $relativePath);
+                    } else {
+                        $message = "Complaint saved, but image upload failed.";
+                        $messageClass = "error-message";
+                    }
+                }
+            }
+
+            if (empty($message)) {
+                $_SESSION["flash_message"] = "Complaint submitted successfully.";
+                $_SESSION["flash_class"] = "success-message";
+
+                header("Location: submit_complaint.php");
+                exit();
+            }
+        } else {
+            $message = "Failed to submit complaint.";
+            $messageClass = "error-message";
+        }
     }
 }
 ?>
@@ -60,46 +116,62 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <html>
 <head>
     <title>Submit Complaint</title>
+    <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
 
-<h1>Submit a Complaint</h1>
+<div class="page-wrapper">
+    <div class="card">
 
-<?php if (!empty($message)): ?>
-    <p><?php echo htmlspecialchars($message); ?></p>
-<?php endif; ?>
+        <div class="page-header">
+            <h1>Submit Complaint</h1>
+            <a href="customer_dashboard.php" class="btn btn-secondary">Back to Dashboard</a>
+        </div>
+        <p class="page-subtitle">Tell us what went wrong and we’ll take care of it.</p>
 
-<form method="POST" action="">
-    <label>Product / Service:</label><br>
-    <select name="product_service_id" required>
-        <option value="">-- Select a Product/Service --</option>
-        <?php foreach ($products as $product): ?>
-            <option value="<?php echo $product["product_service_id"]; ?>">
-                <?php echo htmlspecialchars($product["name"]); ?>
-            </option>
-        <?php endforeach; ?>
-    </select>
-    <br><br>
+                <?php if (!empty($message)): ?>
+            <p class="<?php echo $messageClass; ?>">
+                <?php echo htmlspecialchars($message); ?>
+            </p>
+        <?php endif; ?>
 
-    <label>Complaint Category:</label><br>
-    <select name="category_id" required>
-        <option value="">-- Select a Category --</option>
-        <?php foreach ($categories as $category): ?>
-            <option value="<?php echo $category["category_id"]; ?>">
-                <?php echo htmlspecialchars($category["name"]); ?>
-            </option>
-        <?php endforeach; ?>
-    </select>
-    <br><br>
+        <form method="POST" action="" enctype="multipart/form-data">
+            <label for="product_service_id">Product / Service</label>
+            <select name="product_service_id" id="product_service_id" required>
+                <option value="">-- Select --</option>
+                <?php foreach ($products as $product): ?>
+                    <option value="<?php echo $product["product_service_id"]; ?>"
+                        <?php echo ($productServiceId == $product["product_service_id"]) ? 'selected' : ''; ?>>
+                        <?php echo htmlspecialchars($product["name"]); ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
 
-    <label>Description:</label><br>
-    <textarea name="description" rows="6" cols="50" required></textarea>
-    <br><br>
+            <label for="category_id">Category</label>
+            <select name="category_id" id="category_id" required>
+                <option value="">-- Select --</option>
+                <?php foreach ($categories as $category): ?>
+                    <option value="<?php echo $category["category_id"]; ?>"
+                        <?php echo ($categoryId == $category["category_id"]) ? 'selected' : ''; ?>>
+                        <?php echo htmlspecialchars($category["name"]); ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
 
-    <button type="submit">Submit Complaint</button>
-</form>
+            <label for="description">Description</label>
+            <small class="field-hint">Be as detailed as possible to help us resolve your issue faster.</small>
+            <textarea name="description" id="description" maxlength="2000" required placeholder="Describe the issue..."><?php echo htmlspecialchars($description); ?></textarea>
+            <small class="field-hint">Maximum 2000 characters.</small>
 
-<p><a href="customer_dashboard.php">Back to Dashboard</a></p>
+            <label for="complaint_image">Upload Image (optional)</label>
+            <input id="complaint_image" type="file" name="complaint_image" accept="image/*">
+            <small class="field-hint">Accepted formats: JPG, PNG, GIF, WEBP. Max size: 2MB.</small>
+            
+            <button type="submit">Submit Complaint</button>
+        </form>
+
+    </div>
+</div>
 
 </body>
 </html>
