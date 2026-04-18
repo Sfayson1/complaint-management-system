@@ -8,11 +8,12 @@ A web-based application built using PHP and MySQL that allows customers to submi
 
 This application simulates a real-world customer complaint management system with a complete workflow:
 
-Customer → Administrator → Technician → Resolution
+> Customer → Administrator → Technician → Resolution
 
 Each role interacts with the system through a secure, role-based interface, ensuring proper access control and data integrity.
 
 ### 👥 User Roles
+
 - **Customer**
   - Register and log in
   - Submit complaints
@@ -22,9 +23,8 @@ Each role interacts with the system through a secure, role-based interface, ensu
   - Add notes
   - Mark complaints as resolved
 - **Administrator**
-  - Manage users
   - Assign complaints to technicians
-  - Monitor system activity
+  - View open and unassigned complaints
 
 ---
 
@@ -32,9 +32,34 @@ Each role interacts with the system through a secure, role-based interface, ensu
 
 - PHP
 - MySQL
-- HTML
+- HTML / CSS
 - XAMPP (Apache + MySQL)
 - phpMyAdmin
+
+---
+
+## 📁 Project Structure
+
+```text
+complaint_management_system/
+├── app/
+│   ├── controllers/        # AuthController, ComplaintController
+│   └── models/             # Customer, Complaint, Admin, Technician
+├── config/
+│   └── database.php        # PDO database connection
+├── public/
+│   ├── assets/
+│   │   ├── css/style.css
+│   │   └── uploads/        # Uploaded complaint images
+│   ├── login.php
+│   ├── register.php
+│   ├── customer_dashboard.php
+│   ├── technician_dashboard.php
+│   ├── admin_dashboard.php
+│   └── ...
+└── sql/
+    └── complaint_management_system.sql
+```
 
 ---
 
@@ -57,6 +82,7 @@ The application uses a relational database with the following key tables:
 ## ✨ Features Implemented
 
 ### 👤 Customer
+
 - User registration with full profile details
 - Secure login system with password hashing
 - Update profile information (PRG pattern implemented)
@@ -72,6 +98,7 @@ The application uses a relational database with the following key tables:
   - resolution notes
 
 ### 🛠️ Technician
+
 - Secure login
 - View assigned complaints
 - View full complaint details including customer information
@@ -85,12 +112,14 @@ The application uses a relational database with the following key tables:
   - cannot add notes after resolution
 
 ### 🧑‍💼 Administrator
+
 - Secure login
 - View open complaints
 - Assign complaints to technicians
 - Input validation for assignment actions
 
 ### 🔐 System Features
+
 - Role-based access control (Customer / Technician / Admin)
 - Session-based authentication
 - Full server-side validation aligned with database schema:
@@ -107,14 +136,19 @@ The application uses a relational database with the following key tables:
 1. Install XAMPP
 2. Start Apache and MySQL
 3. Place the project folder in:
-   htdocs/
+   `htdocs/`
 4. Import the database:
-- Open phpMyAdmin
-- Create database: `complaint_management_system`
-- Import SQL file (if provided)
+   - Open phpMyAdmin
+   - Create database: `complaint_management_system`
+   - Import `sql/complaint_management_system.sql`
 
 5. Open the application in browser:
-   http://localhost/complaint_management_system/public/
+   `http://localhost/complaint_management_system/public/`
+
+6. Seed technician and administrator accounts directly in the database:
+   - Insert a row into `users` with `role = 'technician'` or `role = 'administrator'`
+   - Use `public/hash.php` to generate a `password_hash` value for the account
+   - Insert a matching row into `employees` linked by `user_id`
 
 ---
 
@@ -128,7 +162,7 @@ The application uses a relational database with the following key tables:
 
 ## 📸 Screenshots
 
-
+*Screenshots coming soon.*
 
 ---
 
@@ -159,7 +193,7 @@ The application uses a relational database with the following key tables:
 
 ## 👤 Author
 
-**Sherika Fayson**
+Sherika Fayson
 
 ---
 
