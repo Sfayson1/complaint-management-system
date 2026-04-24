@@ -43,22 +43,36 @@ Each role interacts with the system through a secure, role-based interface, ensu
 ```text
 complaint_management_system/
 ├── app/
-│   ├── controllers/        # AuthController, ComplaintController
-│   └── models/             # Customer, Complaint, Admin, Technician
+│   ├── controllers/              # Controller classes
+│   │   ├── AuthController.php    # Handles login and registration
+│   │   └── ComplaintController.php
+│   ├── models/                   # Model classes (database layer)
+│   │   ├── User.php
+│   │   ├── Customer.php
+│   │   ├── Complaint.php
+│   │   ├── Technician.php
+│   │   └── Admin.php
+│   └── views/                    # View files (pages users visit)
+│       ├── login.php
+│       ├── register.php
+│       ├── logout.php
+│       ├── customer_dashboard.php
+│       ├── customer_complaint_detail.php
+│       ├── submit_complaint.php
+│       ├── view_complaints.php
+│       ├── update_profile.php
+│       ├── technician_dashboard.php
+│       ├── technician_complaint_detail.php
+│       ├── admin_dashboard.php
+│       └── admin_assign_complaints.php
+├── assets/
+│   ├── css/style.css
+│   └── uploads/                  # Uploaded complaint images
 ├── config/
-│   └── database.php        # PDO database connection
-├── public/
-│   ├── assets/
-│   │   ├── css/style.css
-│   │   └── uploads/        # Uploaded complaint images
-│   ├── login.php
-│   ├── register.php
-│   ├── customer_dashboard.php
-│   ├── technician_dashboard.php
-│   ├── admin_dashboard.php
-│   └── ...
-└── sql/
-    └── complaint_management_system.sql
+│   └── database.php              # PDO database connection
+├── sql/
+│   └── complaint_management_system.sql
+└── index.php                     # Main menu (links to views)
 ```
 
 ---
@@ -143,11 +157,11 @@ The application uses a relational database with the following key tables:
    - Import `sql/complaint_management_system.sql`
 
 5. Open the application in browser:
-   `http://localhost/complaint_management_system/public/`
+   `http://localhost/complaint_management_system/`
 
 6. Seed technician and administrator accounts directly in the database:
    - Insert a row into `users` with `role = 'technician'` or `role = 'administrator'`
-   - Use `public/hash.php` to generate a `password_hash` value for the account
+   - Use `hash.php` to generate a `password_hash` value for the account
    - Insert a matching row into `employees` linked by `user_id`
 
 ---
