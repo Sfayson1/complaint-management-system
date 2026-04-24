@@ -160,9 +160,14 @@ The application uses a relational database with the following key tables:
    `http://localhost/complaint_management_system/`
 
 6. Seed technician and administrator accounts directly in the database:
-   - Insert a row into `users` with `role = 'technician'` or `role = 'administrator'`
-   - Use `hash.php` to generate a `password_hash` value for the account
-   - Insert a matching row into `employees` linked by `user_id`
+   - Open `hash.php` and replace `"Admin1234"` with the password you want to use
+   - Visit `http://localhost/complaint_management_system/hash.php` in your browser
+   - Copy the long hash string that appears on the page
+   - In phpMyAdmin, insert a row into `users` with:
+     - `email` = the account's email address
+     - `password_hash` = the copied hash string
+     - `role` = `technician` or `administrator`
+   - Insert a matching row into `employees` with the `user_id` from the inserted user
 
 ---
 
