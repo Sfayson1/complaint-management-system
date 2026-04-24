@@ -8,8 +8,8 @@ if (!isset($_SESSION["user_id"]) || $_SESSION["role"] !== "technician") {
     exit();
 }
 
-require_once __DIR__ . '/../config/database.php';
-require_once __DIR__ . '/../app/models/Technician.php';
+require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../models/Technician.php';
 
 $db = new Database();
 $conn = $db->connect();
@@ -29,7 +29,7 @@ $assignedComplaints = $technicianModel->getAssignedComplaints($employeeId);
 <html>
 <head>
     <title>Technician Dashboard</title>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/style.css">
 </head>
 <body>
 
@@ -62,9 +62,7 @@ $assignedComplaints = $technicianModel->getAssignedComplaints($employeeId);
                         <?php foreach ($assignedComplaints as $complaint): ?>
                             <tr>
                                 <td>#<?php echo htmlspecialchars($complaint["complaint_id"]); ?></td>
-                                <td>
-                                    <?php echo htmlspecialchars($complaint["first_name"] . ' ' . $complaint["last_name"]); ?>
-                                </td>
+                                <td><?php echo htmlspecialchars($complaint["first_name"] . ' ' . $complaint["last_name"]); ?></td>
                                 <td><?php echo htmlspecialchars($complaint["product_name"]); ?></td>
                                 <td><?php echo htmlspecialchars($complaint["category_name"]); ?></td>
                                 <td>

@@ -8,8 +8,8 @@ if (!isset($_SESSION["user_id"]) || $_SESSION["role"] !== "customer") {
     exit();
 }
 
-require_once __DIR__ . '/../config/database.php';
-require_once __DIR__ . '/../app/models/Customer.php';
+require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../models/Customer.php';
 
 $db = new Database();
 $conn = $db->connect();
@@ -77,13 +77,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     } else {
         $success = $customerModel->updateByUserId(
             $_SESSION["user_id"],
-            $firstName,
-            $lastName,
-            $streetAddress,
-            $city,
-            $state,
-            $zipCode,
-            $phone
+            $firstName, $lastName, $streetAddress, $city, $state, $zipCode, $phone
         );
 
         if ($success) {
@@ -101,7 +95,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <html>
 <head>
     <title>Update Profile</title>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/style.css">
 </head>
 <body>
 

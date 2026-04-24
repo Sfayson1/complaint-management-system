@@ -1,14 +1,20 @@
 <?php
+session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../controllers/AuthController.php';
 
 $db = new Database();
 $conn = $db->connect();
 
+$auth = new AuthController($conn);
+
 $message = "";
 $messageClass = "";
+
+$firstName = $lastName = $streetAddress = $city = $state = $zipCode = $phone = $email = "";
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $firstName = trim($_POST["first_name"] ?? "");
@@ -21,7 +27,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $email = trim($_POST["email"] ?? "");
     $password = $_POST["password"] ?? "";
 
-    // Validation
     if (
         empty($firstName) || empty($lastName) || empty($streetAddress) ||
         empty($city) || empty($state) || empty($zipCode) ||
@@ -66,45 +71,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $messageClass = "error-message";
     } else {
         try {
-            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+            $success = $auth->register($email, $password, $firstName, $lastName, $streetAddress, $city, $state, $zipCode, $phone);
 
-            // Insert into users
-            $stmt = $conn->prepare("
-                INSERT INTO users (email, password_hash, role)
-                VALUES (?, ?, 'customer')
-            ");
-            $stmt->execute([$email, $hashedPassword]);
-
-            $userId = $conn->lastInsertId();
-
-            // Insert into customers
-            $stmt = $conn->prepare("
-                INSERT INTO customers (
-                    user_id,
-                    first_name,
-                    last_name,
-                    street_address,
-                    city,
-                    state,
-                    zip_code,
-                    phone
-                )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-            ");
-            $stmt->execute([
-                $userId,
-                $firstName,
-                $lastName,
-                $streetAddress,
-                $city,
-                $state,
-                $zipCode,
-                $phone
-            ]);
-
-            $message = "Registration successful! You can now log in.";
-            $messageClass = "success-message";
-
+            if ($success) {
+                $message = "Registration successful! You can now log in.";
+                $messageClass = "success-message";
+            } else {
+                $message = "Registration failed. Please try again.";
+                $messageClass = "error-message";
+            }
         } catch (PDOException $e) {
             if ($e->getCode() == 23000) {
                 $message = "That email address is already registered.";
@@ -121,7 +96,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <html>
 <head>
     <title>Register</title>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/style.css">
 </head>
 <body>
 

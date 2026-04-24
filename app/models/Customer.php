@@ -7,6 +7,15 @@ class Customer {
         $this->conn = $db;
     }
 
+    public function create($userId, $firstName, $lastName, $streetAddress, $city, $state, $zipCode, $phone) {
+        $stmt = $this->conn->prepare("
+            INSERT INTO customers (user_id, first_name, last_name, street_address, city, state, zip_code, phone)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        ");
+
+        return $stmt->execute([$userId, $firstName, $lastName, $streetAddress, $city, $state, $zipCode, $phone]);
+    }
+
     public function getByUserId($userId) {
         $stmt = $this->conn->prepare("
             SELECT * FROM customers WHERE user_id = ?

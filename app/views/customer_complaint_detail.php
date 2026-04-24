@@ -8,9 +8,9 @@ if (!isset($_SESSION["user_id"]) || $_SESSION["role"] !== "customer") {
     exit();
 }
 
-require_once __DIR__ . '/../config/database.php';
-require_once __DIR__ . '/../app/models/Customer.php';
-require_once __DIR__ . '/../app/models/Complaint.php';
+require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../models/Customer.php';
+require_once __DIR__ . '/../models/Complaint.php';
 
 $db = new Database();
 $conn = $db->connect();
@@ -44,7 +44,7 @@ $notes = $complaintModel->getTechnicianNotesByComplaintId($complaintId);
 <html>
 <head>
     <title>Complaint Detail</title>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/style.css">
 </head>
 <body>
 

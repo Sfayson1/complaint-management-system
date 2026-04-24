@@ -28,6 +28,12 @@ class User {
             VALUES (?, ?, 'customer')
         ");
 
-        return $stmt->execute([$email, $hashedPassword]);
+        $success = $stmt->execute([$email, $hashedPassword]);
+
+        if ($success) {
+            return $this->conn->lastInsertId();
+        }
+
+        return false;
     }
 }

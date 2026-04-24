@@ -6,6 +6,20 @@ class Complaint {
         $this->conn = $db;
     }
 
+public function getStatsByCustomerId($customerId) {
+    $stmt = $this->conn->prepare("
+        SELECT
+            COUNT(*) AS total,
+            SUM(status = 'open') AS open_count,
+            SUM(status = 'resolved') AS resolved_count
+        FROM complaints
+        WHERE customer_id = ?
+    ");
+
+    $stmt->execute([$customerId]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
 public function create($customerId, $productServiceId, $categoryId, $description) {
     $stmt = $this->conn->prepare("
         INSERT INTO complaints (customer_id, product_service_id, category_id, description, status)

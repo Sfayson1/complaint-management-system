@@ -8,8 +8,8 @@ if (!isset($_SESSION["user_id"]) || $_SESSION["role"] !== "administrator") {
     exit();
 }
 
-require_once __DIR__ . '/../config/database.php';
-require_once __DIR__ . '/../app/models/Admin.php';
+require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../models/Admin.php';
 
 $db = new Database();
 $conn = $db->connect();
@@ -50,7 +50,7 @@ $complaints = $adminModel->getOpenComplaints();
 <html>
 <head>
     <title>Assign Complaints</title>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/style.css">
 </head>
 <body>
 
@@ -99,13 +99,9 @@ $complaints = $adminModel->getOpenComplaints();
                                 </td>
                                 <td><?php echo htmlspecialchars(date("M j, Y", strtotime($complaint["created_at"]))); ?></td>
                                 <td>
-                                    <?php
-                                    if (!empty($complaint["technician_first_name"])) {
-                                        echo htmlspecialchars($complaint["technician_first_name"] . ' ' . $complaint["technician_last_name"]);
-                                    } else {
-                                        echo "Unassigned";
-                                    }
-                                    ?>
+                                    <?php echo !empty($complaint["technician_first_name"])
+                                        ? htmlspecialchars($complaint["technician_first_name"] . ' ' . $complaint["technician_last_name"])
+                                        : "Unassigned"; ?>
                                 </td>
                                 <td class="assign-cell">
                                     <form method="POST" action="">

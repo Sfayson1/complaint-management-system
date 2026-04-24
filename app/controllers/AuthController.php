@@ -1,11 +1,14 @@
 <?php
 require_once __DIR__ . '/../models/User.php';
+require_once __DIR__ . '/../models/Customer.php';
 
 class AuthController {
     private $userModel;
+    private $customerModel;
 
     public function __construct($db) {
-        $this->userModel = new User($db); // 👈 THIS is where error happens
+        $this->userModel = new User($db);
+        $this->customerModel = new Customer($db);
     }
 
     public function login($email, $password) {
@@ -20,5 +23,15 @@ class AuthController {
         }
 
         return false;
+    }
+
+    public function register($email, $password, $firstName, $lastName, $streetAddress, $city, $state, $zipCode, $phone) {
+        $userId = $this->userModel->create($email, $password);
+
+        if (!$userId) {
+            return false;
+        }
+
+        return $this->customerModel->create($userId, $firstName, $lastName, $streetAddress, $city, $state, $zipCode, $phone);
     }
 }

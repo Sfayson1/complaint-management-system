@@ -3,8 +3,8 @@ session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-require_once __DIR__ . '/../config/database.php';
-require_once __DIR__ . '/../app/controllers/AuthController.php';
+require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../controllers/AuthController.php';
 
 $db = new Database();
 $conn = $db->connect();
@@ -43,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <html>
 <head>
     <title>Login</title>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/style.css">
 </head>
 <body>
 

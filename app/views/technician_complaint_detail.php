@@ -8,8 +8,8 @@ if (!isset($_SESSION["user_id"]) || $_SESSION["role"] !== "technician") {
     exit();
 }
 
-require_once __DIR__ . '/../config/database.php';
-require_once __DIR__ . '/../app/models/Technician.php';
+require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../models/Technician.php';
 
 $db = new Database();
 $conn = $db->connect();
@@ -105,7 +105,7 @@ $notes = $technicianModel->getTechnicianNotes($complaintId);
 <html>
 <head>
     <title>Technician Complaint Detail</title>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/style.css">
 </head>
 <body>
 
@@ -186,7 +186,7 @@ $notes = $technicianModel->getTechnicianNotes($complaintId);
                 <?php endforeach; ?>
             <?php endif; ?>
 
-            <?php if ($complaint["status"] !== "resolved"): ?>
+            <?php if (!$isResolved): ?>
                 <form method="POST" action="">
                     <label for="note_text">Add Technician Note</label>
                     <textarea name="note_text" id="note_text" required></textarea>
@@ -195,10 +195,9 @@ $notes = $technicianModel->getTechnicianNotes($complaintId);
             <?php endif; ?>
         </div>
 
-        <?php if ($complaint["status"] !== "resolved"): ?>
+        <?php if (!$isResolved): ?>
             <div class="detail-card" style="margin-top: 24px;">
                 <h2>Resolve Complaint</h2>
-
                 <form method="POST" action="">
                     <label for="resolution_notes">Resolution Notes</label>
                     <textarea name="resolution_notes" id="resolution_notes" required></textarea>

@@ -8,8 +8,8 @@ if (!isset($_SESSION["user_id"]) || $_SESSION["role"] !== "administrator") {
     exit();
 }
 
-require_once __DIR__ . '/../config/database.php';
-require_once __DIR__ . '/../app/models/Admin.php';
+require_once __DIR__ . '/../../config/database.php';
+require_once __DIR__ . '/../models/Admin.php';
 
 $db = new Database();
 $conn = $db->connect();
@@ -26,7 +26,7 @@ if (!$admin) {
 <html>
 <head>
     <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="../../assets/css/style.css">
 </head>
 <body>
 
