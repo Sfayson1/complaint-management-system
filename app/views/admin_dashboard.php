@@ -40,7 +40,12 @@ if (!$admin) {
         <p class="page-subtitle">Administrator dashboard</p>
 
         <div class="dashboard-actions">
+            <a href="admin_view_customers.php" class="btn">View Customers</a>
+            <a href="admin_view_employees.php" class="btn">View Employees</a>
+            <a href="admin_open_complaints.php" class="btn">View Open Complaints</a>
             <a href="admin_assign_complaints.php" class="btn">Assign Complaints</a>
+            <a href="admin_workload_report.php" class="btn">Workload Report</a>
+            <a href="change_password.php" class="btn">Change Password</a>
         </div>
     </div>
 </div>

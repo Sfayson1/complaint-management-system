@@ -42,6 +42,10 @@ $assignedComplaints = $technicianModel->getAssignedComplaints($employeeId);
 
         <p class="page-subtitle">Assigned complaints dashboard</p>
 
+        <div class="dashboard-actions">
+            <a href="change_password.php" class="btn">Change Password</a>
+        </div>
+
         <?php if (empty($assignedComplaints)): ?>
             <p class="empty-state-text">No complaints are currently assigned to you.</p>
         <?php else: ?>

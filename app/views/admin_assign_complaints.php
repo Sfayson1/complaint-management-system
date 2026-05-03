@@ -42,8 +42,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 }
 
+$complaints = $adminModel->getUnassignedComplaints();
 $technicians = $adminModel->getAllTechnicians();
-$complaints = $adminModel->getOpenComplaints();
 ?>
 
 <!DOCTYPE html>
@@ -61,7 +61,7 @@ $complaints = $adminModel->getOpenComplaints();
             <a href="admin_dashboard.php" class="btn btn-secondary">Back to Dashboard</a>
         </div>
 
-        <p class="page-subtitle">Assign open complaints to technicians.</p>
+        <p class="page-subtitle">Assign unassigned complaints to technicians.</p>
 
         <?php if (!empty($message)): ?>
             <div class="<?php echo $messageClass; ?>">
@@ -70,39 +70,29 @@ $complaints = $adminModel->getOpenComplaints();
         <?php endif; ?>
 
         <?php if (empty($complaints)): ?>
-            <p class="empty-state-text">No open complaints found.</p>
+            <p class="empty-state-text">All open complaints are currently assigned.</p>
         <?php else: ?>
             <div class="table-wrapper">
                 <table>
                     <thead>
                         <tr>
+                            <th>ID</th>
                             <th>Customer</th>
                             <th>Product / Category</th>
-                            <th>Status</th>
-                            <th>Date</th>
-                            <th>Assigned To</th>
-                            <th>Assign</th>
+                            <th>Date Submitted</th>
+                            <th>Assign To</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach ($complaints as $complaint): ?>
                             <tr>
+                                <td>#<?php echo htmlspecialchars($complaint["complaint_id"]); ?></td>
                                 <td><?php echo htmlspecialchars($complaint["first_name"] . ' ' . $complaint["last_name"]); ?></td>
                                 <td>
                                     <?php echo htmlspecialchars($complaint["product_name"]); ?><br>
                                     <small style="color:#6b7280;"><?php echo htmlspecialchars($complaint["category_name"]); ?></small>
                                 </td>
-                                <td>
-                                    <span class="status-badge status-<?php echo htmlspecialchars(strtolower($complaint["status"])); ?>">
-                                        <?php echo htmlspecialchars($complaint["status"]); ?>
-                                    </span>
-                                </td>
                                 <td><?php echo htmlspecialchars(date("M j, Y", strtotime($complaint["created_at"]))); ?></td>
-                                <td>
-                                    <?php echo !empty($complaint["technician_first_name"])
-                                        ? htmlspecialchars($complaint["technician_first_name"] . ' ' . $complaint["technician_last_name"])
-                                        : "Unassigned"; ?>
-                                </td>
                                 <td class="assign-cell">
                                     <form method="POST" action="">
                                         <input type="hidden" name="complaint_id" value="<?php echo htmlspecialchars($complaint["complaint_id"]); ?>">

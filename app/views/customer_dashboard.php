@@ -68,6 +68,7 @@ if ($customer) {
             <a href="submit_complaint.php" class="btn">Submit a Complaint</a>
             <a href="view_complaints.php" class="btn">View My Complaints</a>
             <a href="update_profile.php" class="btn">Update My Profile</a>
+            <a href="change_password.php" class="btn">Change Password</a>
         </div>
 
         <div class="dashboard-footer">
