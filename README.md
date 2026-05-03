@@ -16,15 +16,22 @@ Each role interacts with the system through a secure, role-based interface, ensu
 
 - **Customer**
   - Register and log in
-  - Submit complaints
-  - View complaint status
+  - Submit complaints with image upload
+  - View complaint status and technician notes
+  - Update profile information
+  - Change password
 - **Technician**
   - View assigned complaints
-  - Add notes
+  - Add technician notes
   - Mark complaints as resolved
+  - Change password
 - **Administrator**
-  - Assign complaints to technicians
-  - View open and unassigned complaints
+  - View all open complaints
+  - Assign unassigned complaints to technicians
+  - View and edit customer profiles
+  - View, add, and edit employee accounts
+  - View technician workload report
+  - Change password
 
 ---
 
@@ -56,6 +63,7 @@ complaint_management_system/
 │       ├── login.php
 │       ├── register.php
 │       ├── logout.php
+│       ├── change_password.php
 │       ├── customer_dashboard.php
 │       ├── customer_complaint_detail.php
 │       ├── submit_complaint.php
@@ -64,7 +72,14 @@ complaint_management_system/
 │       ├── technician_dashboard.php
 │       ├── technician_complaint_detail.php
 │       ├── admin_dashboard.php
-│       └── admin_assign_complaints.php
+│       ├── admin_open_complaints.php
+│       ├── admin_assign_complaints.php
+│       ├── admin_view_customers.php
+│       ├── admin_edit_customer.php
+│       ├── admin_view_employees.php
+│       ├── admin_add_employee.php
+│       ├── admin_edit_employee.php
+│       └── admin_workload_report.php
 ├── assets/
 │   ├── css/style.css
 │   └── uploads/                  # Uploaded complaint images
@@ -98,8 +113,9 @@ The application uses a relational database with the following key tables:
 ### 👤 Customer
 
 - User registration with full profile details
-- Secure login system with password hashing
+- Secure login with password hashing
 - Update profile information (PRG pattern implemented)
+- Change password with complexity enforcement and reuse prevention
 - Submit complaints with:
   - product/service selection
   - complaint category selection
@@ -116,21 +132,26 @@ The application uses a relational database with the following key tables:
 - Secure login
 - View assigned complaints
 - View full complaint details including customer information
-- Add technician notes (blocked if complaint is resolved)
-- Mark complaints as resolved
-- Automatically store:
-  - resolution date
-  - resolution notes
-- Prevent invalid actions:
+- Add technician notes (blocked once complaint is resolved)
+- Mark complaints as resolved with required resolution notes
+- Automatically stores resolution date and resolution notes
+- Change password with complexity enforcement
+- Prevents invalid actions:
   - cannot re-resolve a complaint
   - cannot add notes after resolution
 
 ### 🧑‍💼 Administrator
 
 - Secure login
-- View open complaints
-- Assign complaints to technicians
-- Input validation for assignment actions
+- View all open complaints with assignment status
+- Assign unassigned complaints to technicians
+- View all customer accounts
+- Edit customer profiles (first name, last name)
+- View all employee accounts (technicians and administrators)
+- Add new employee accounts (technician or administrator role)
+- Edit employee names
+- View technician workload report (open, resolved, and total complaints per technician)
+- Change password with complexity enforcement
 
 ### 🔐 System Features
 
@@ -139,7 +160,7 @@ The application uses a relational database with the following key tables:
 - Full server-side validation aligned with database schema:
   - length validation
   - format validation (email, phone, ZIP, state)
-  - password complexity enforcement
+  - password complexity enforcement (min 8 characters, uppercase, lowercase, number)
 - Prepared statements for all database interactions
 - PRG (Post/Redirect/Get) pattern to prevent duplicate form submissions
 
@@ -198,15 +219,9 @@ The application uses a relational database with the following key tables:
 
 ## 🔮 Future Improvements
 
-- Change password functionality for all user roles
-- Admin management pages:
-  - view/update customers
-  - add/update employees
-- Admin reporting:
-  - unassigned complaints view
-  - technician workload tracking
-- Optional: switch login from email to user ID for strict requirement alignment
+- HTTPS / SSL configuration
 - UI/UX enhancements and responsive design improvements
+- Email notifications when a complaint is assigned or resolved
 
 ---
 
