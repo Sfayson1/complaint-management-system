@@ -180,7 +180,7 @@ $notes = $technicianModel->getTechnicianNotes($complaintId);
                 <?php foreach ($notes as $note): ?>
                     <div class="note-card">
                         <p><strong><?php echo htmlspecialchars($note["first_name"] . ' ' . $note["last_name"]); ?></strong></p>
-                        <p><?php echo htmlspecialchars($note["note_text"] ?? $note["note"] ?? ""); ?></p>
+                        <p><?php echo htmlspecialchars($note["note"] ?? ""); ?></p>
                         <small><?php echo htmlspecialchars(date("M j, Y g:i A", strtotime($note["created_at"]))); ?></small>
                     </div>
                 <?php endforeach; ?>
