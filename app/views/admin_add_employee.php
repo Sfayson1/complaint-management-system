@@ -19,13 +19,14 @@ $adminModel = new Admin($conn);
 $message = "";
 $messageClass = "";
 
-$firstName = $lastName = $email = $role = "";
+$firstName = $lastName = $email = $role = $extension = "";
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $firstName = trim($_POST["first_name"] ?? "");
     $lastName = trim($_POST["last_name"] ?? "");
     $email = trim($_POST["email"] ?? "");
     $role = $_POST["role"] ?? "";
+    $extension = trim($_POST["extension"] ?? "");
     $password = $_POST["password"] ?? "";
     $confirmPassword = $_POST["confirm_password"] ?? "";
 
@@ -34,6 +35,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $messageClass = "error-message";
     } elseif (strlen($firstName) > 50 || strlen($lastName) > 50) {
         $message = "First and last name must be 50 characters or fewer.";
+        $messageClass = "error-message";
+    } elseif (strlen($extension) > 10) {
+        $message = "Phone extension must be 10 characters or fewer.";
         $messageClass = "error-message";
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL) || strlen($email) > 100) {
         $message = "Please enter a valid email address.";
@@ -54,7 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $messageClass = "error-message";
     } else {
         try {
-            $success = $adminModel->addEmployee($email, $password, $role, $firstName, $lastName);
+            $success = $adminModel->addEmployee($email, $password, $role, $firstName, $lastName, $extension);
 
             if ($success) {
                 header("Location: admin_view_employees.php");
@@ -107,6 +111,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             <label for="email">Email</label>
             <input id="email" type="email" name="email" maxlength="100" value="<?php echo htmlspecialchars($email); ?>" required>
+
+            <label for="extension">Phone Extension</label>
+            <input id="extension" type="text" name="extension" maxlength="10" value="<?php echo htmlspecialchars($extension); ?>" placeholder="e.g. 101">
 
             <label for="role">Role</label>
             <select id="role" name="role" required>

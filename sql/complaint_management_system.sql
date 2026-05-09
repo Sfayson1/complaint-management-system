@@ -33,7 +33,10 @@ CREATE TABLE `complaints` (
   `product_service_id` int(11) NOT NULL,
   `category_id` int(11) NOT NULL,
   `description` text DEFAULT NULL,
-  `status` varchar(20) DEFAULT 'open'
+  `status` varchar(20) DEFAULT 'open',
+  `resolution_date` datetime DEFAULT NULL,
+  `resolution_notes` text DEFAULT NULL,
+  `created_at` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -91,6 +94,10 @@ CREATE TABLE `customers` (
   `user_id` int(11) NOT NULL,
   `first_name` varchar(50) DEFAULT NULL,
   `last_name` varchar(50) DEFAULT NULL,
+  `street_address` varchar(100) DEFAULT NULL,
+  `city` varchar(50) DEFAULT NULL,
+  `state` char(2) DEFAULT NULL,
+  `zip_code` varchar(10) DEFAULT NULL,
   `phone` varchar(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -98,8 +105,8 @@ CREATE TABLE `customers` (
 -- Dumping data for table `customers`
 --
 
-INSERT INTO `customers` (`customer_id`, `user_id`, `first_name`, `last_name`, `phone`) VALUES
-(1, 1, 'Brandy', 'Norwood', '555-555-5555');
+INSERT INTO `customers` (`customer_id`, `user_id`, `first_name`, `last_name`, `street_address`, `city`, `state`, `zip_code`, `phone`) VALUES
+(1, 1, 'Brandy', 'Norwood', '123 Main St', 'Atlanta', 'GA', '30301', '555-555-5555');
 
 -- --------------------------------------------------------
 

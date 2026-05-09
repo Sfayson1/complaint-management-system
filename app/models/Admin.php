@@ -163,7 +163,7 @@ class Admin {
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function addEmployee($email, $password, $role, $firstName, $lastName) {
+    public function addEmployee($email, $password, $role, $firstName, $lastName, $extension = "") {
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
         $userStmt = $this->conn->prepare("
@@ -178,16 +178,16 @@ class Admin {
         $userId = $this->conn->lastInsertId();
 
         $empStmt = $this->conn->prepare("
-            INSERT INTO employees (user_id, first_name, last_name) VALUES (?, ?, ?)
+            INSERT INTO employees (user_id, first_name, last_name, extension) VALUES (?, ?, ?, ?)
         ");
-        return $empStmt->execute([$userId, $firstName, $lastName]);
+        return $empStmt->execute([$userId, $firstName, $lastName, $extension ?: null]);
     }
 
-    public function updateEmployee($employeeId, $firstName, $lastName) {
+    public function updateEmployee($employeeId, $firstName, $lastName, $extension = "") {
         $stmt = $this->conn->prepare("
-            UPDATE employees SET first_name = ?, last_name = ? WHERE employee_id = ?
+            UPDATE employees SET first_name = ?, last_name = ?, extension = ? WHERE employee_id = ?
         ");
-        return $stmt->execute([$firstName, $lastName, $employeeId]);
+        return $stmt->execute([$firstName, $lastName, $extension ?: null, $employeeId]);
     }
 
     // ── Workload Report ────────────────────────────────────────

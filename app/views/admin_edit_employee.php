@@ -33,10 +33,12 @@ $messageClass = "";
 
 $firstName = $employee["first_name"] ?? "";
 $lastName = $employee["last_name"] ?? "";
+$extension = $employee["extension"] ?? "";
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $firstName = trim($_POST["first_name"] ?? "");
     $lastName = trim($_POST["last_name"] ?? "");
+    $extension = trim($_POST["extension"] ?? "");
 
     if (empty($firstName) || empty($lastName)) {
         $message = "First and last name are required.";
@@ -44,8 +46,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     } elseif (strlen($firstName) > 50 || strlen($lastName) > 50) {
         $message = "First and last name must be 50 characters or fewer.";
         $messageClass = "error-message";
+    } elseif (strlen($extension) > 10) {
+        $message = "Phone extension must be 10 characters or fewer.";
+        $messageClass = "error-message";
     } else {
-        $success = $adminModel->updateEmployee($employeeId, $firstName, $lastName);
+        $success = $adminModel->updateEmployee($employeeId, $firstName, $lastName, $extension);
 
         if ($success) {
             $message = "Employee updated successfully.";
@@ -91,6 +96,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             <label for="last_name">Last Name</label>
             <input id="last_name" type="text" name="last_name" maxlength="50" value="<?php echo htmlspecialchars($lastName); ?>" required>
+
+            <label for="extension">Phone Extension</label>
+            <input id="extension" type="text" name="extension" maxlength="10" value="<?php echo htmlspecialchars($extension); ?>" placeholder="e.g. 101">
 
             <button type="submit">Save Changes</button>
         </form>

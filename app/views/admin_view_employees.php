@@ -48,6 +48,7 @@ $employees = $adminModel->getAllEmployees();
                         <tr>
                             <th>Name</th>
                             <th>Email</th>
+                            <th>Extension</th>
                             <th>Role</th>
                             <th>Actions</th>
                         </tr>
@@ -57,6 +58,7 @@ $employees = $adminModel->getAllEmployees();
                             <tr>
                                 <td><?php echo htmlspecialchars($employee["first_name"] . ' ' . $employee["last_name"]); ?></td>
                                 <td><?php echo htmlspecialchars($employee["email"]); ?></td>
+                                <td><?php echo !empty($employee["extension"]) ? htmlspecialchars($employee["extension"]) : "<span style='color:#9ca3af;'>—</span>"; ?></td>
                                 <td><?php echo htmlspecialchars(ucfirst($employee["role"])); ?></td>
                                 <td>
                                     <a href="admin_edit_employee.php?id=<?php echo $employee["employee_id"]; ?>" class="btn">Edit</a>
