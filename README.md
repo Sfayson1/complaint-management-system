@@ -204,11 +204,11 @@ The application uses a relational database with the following key tables:
 
 ### Registration
 
-(register-page.png)
+![Registration Page](/assets/screenshots/register-page.png)
 
 ### Customer Dashboard
 
-![Customer Dashboard](screenshots/customer-dashboard.png)
+![Customer Dashboard](/assets/screenshots/customer-dashboard.png)
 
 ### Submit Complaint
 
