@@ -208,7 +208,7 @@ The application uses a relational database with the following key tables:
 
 ### Customer Dashboard
 
-(customer-dashboard.png)
+![Customer Dashboard](screenshots/customer-dashboard.png)
 
 ### Submit Complaint
 
