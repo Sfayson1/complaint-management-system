@@ -212,39 +212,39 @@ The application uses a relational database with the following key tables:
 
 ### Submit Complaint
 
-(submit-complaint-form.png)
+![Submit Complaint Form](/assets/screenshots/submit-complaint-form.png)
 
 ### Customer Complaint Tracking
 
-(customer-complaints-list.png)
+![Customer Complaints List](/assets/screenshots/customer-complaints-list.png)
 
 ### Complaint Detail View
 
-(customer-complaint-detail.png)
+![Customer Complaint Detail](/assets/screenshots/customer-complaint-detail.png)
 
 ### Technician Dashboard
 
-(technician-dashboard.png)
+![Technician Dashboard](/assets/screenshots/technician-dashboard.png)
 
 ### Technician Complaint Management
 
-(technician-complaint-detail.png)
+![Technician Complaint Detail](/assets/screenshots/technician-complaint-detail.png)
 
 ### Admin Dashboard
 
-(admin-dashboard.png)
+![Admin Dashboard](/assets/screenshots/admin-dashboard.png)
 
 ### Complaint Assignment
 
-(assign-complaints.png)
+![Assign Complaints](/assets/screenshots/assign-complaints.png)
 
 ### Employee Management
 
-(admin-view-employees.png)
+![Admin View Employees](/assets/screenshots/admin-view-employees.png)
 
 ### Workload Reporting
 
-(technician-workload-report.png)
+![Technician Workload Report](/assets/screenshots/technician-workload-report.png)
 
 ---
 
