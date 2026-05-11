@@ -259,13 +259,28 @@ The application uses a relational database with the following key tables:
 
 ---
 
-## 🔮 Future Improvements
-
-- HTTPS / SSL configuration
-- UI/UX enhancements and responsive design improvements
-- Email notifications when a complaint is assigned or resolved
-
 ---
+
+## 📊 Project Summary
+
+The Complaint Management System is a fully functional web application designed to simulate a real-world service workflow between customers, administrators, and technicians.
+
+This project demonstrates full-stack development using PHP and MySQL, while applying key software engineering concepts such as MVC architecture, relational database design, role-based access control, and secure authentication.
+
+Throughout development, significant emphasis was placed on:
+
+- Data validation and security
+- Workflow integrity and role enforcement
+- User experience and interface consistency
+- Incremental testing and debugging
+
+The system successfully supports the complete lifecycle of a complaint, from submission to resolution, with clear separation of responsibilities across user roles.
+
+This project reflects my ability to design, build, and debug a multi-role application while following structured development practices, making it a strong addition to my software development portfolio.
+
+## Walk through
+
+![demo](https://youtu.be/_hQRRqpR7x0)
 
 ## 👤 Author
 
