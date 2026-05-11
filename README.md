@@ -278,9 +278,12 @@ The system successfully supports the complete lifecycle of a complaint, from sub
 
 This project reflects my ability to design, build, and debug a multi-role application while following structured development practices, making it a strong addition to my software development portfolio.
 
-## Walk through
+## 🎥 Project Demo
 
-![demo](https://youtu.be/_hQRRqpR7x0)
+Watch the full demo here:
+
+[DEMO](https://youtu.be/_hQRRqpR7x0)
+
 
 ## 👤 Author
 
