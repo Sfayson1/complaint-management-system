@@ -282,7 +282,7 @@ This project reflects my ability to design, build, and debug a multi-role applic
 
 Watch the full demo here:
 
-[DEMO](https://youtu.be/_hQRRqpR7x0)
+[DEMO](https://youtu.be/EzUW1NGSG7g)
 
 
 ## 👤 Author
